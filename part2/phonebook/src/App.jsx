@@ -7,18 +7,21 @@ const App = () => {
   const [newName, setNewName] = useState('')
 
   const handleInput = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log("submit clicked")
+    if (persons.some(person => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+     
     const p = persons.concat({name: newName})
     setNewName('')
-    console.log(p)
     setPersons(p)
   }
+
 
   return (
     <div>
