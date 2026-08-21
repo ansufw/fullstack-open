@@ -53,6 +53,22 @@ const App = () => {
     setNewNumber('')
   }
 
+  const deletePerson = (id) => {
+    const person = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${person.name}`)) {
+      personService
+        .remove(id)
+        .then(() => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+        .catch(error => {
+        alert(`fail to remove ${person.name}`)
+        console.log(`error: ${error}`)
+      })
+    }
+  }
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -68,7 +84,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} search={newSearch} />
+      <Persons persons={persons} search={newSearch} deletePerson={deletePerson}  />
     </div>
   )
 }
