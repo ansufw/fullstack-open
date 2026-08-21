@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
+
 
 const App = () => {
   const [persons, setPersons] = useState([])
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log("promise fulfilled")
-        setPersons(response.data)
-      })
+    personService
+      .getAll()
+      .then(p => setPersons(p))
   }, [])
 
   const [newName, setNewName] = useState('')
@@ -48,7 +46,7 @@ const App = () => {
       number: newNumber,
       id: persons.length > 0 ? Math.max(...persons.map((p) => p.id)) + 1 : 1
     }
-    axios.post("http://localhost:3001/persons", newPerson).then(response => console.log(response.data))
+    personService.create(newPerson)
     setPersons(persons.concat(newPerson))
 
     setNewName('')
