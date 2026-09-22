@@ -3,10 +3,13 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 const App = () => {
   const [persons, setPersons] = useState([])
+  const [notificationMessage, setNotificationMessage] = useState(null)
+
   useEffect(() => {
     personService
       .getAll()
@@ -50,6 +53,10 @@ const App = () => {
             setPersons(persons.map((p) => p.id !== existingPerson.id ? p : returnedPerson))
             setNewName('')
             setNewNumber('')
+            setNotificationMessage(`Updated ${existingPerson.name}`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
           })
           .catch(error => {
             alert(`Information of ${existingPerson.name} has already been removed from server`)
@@ -65,10 +72,15 @@ const App = () => {
       id: persons.length > 0 ? Math.max(...persons.map((p) => p.id)) + 1 : 1
     }
     personService.create(newPerson)
+
     setPersons(persons.concat(newPerson))
 
     setNewName('')
     setNewNumber('')
+    setNotificationMessage(`Added ${newPerson.name}`)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const deletePerson = (id) => {
@@ -90,6 +102,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notificationMessage} />
+
       <Filter value={newSearch} onChange={handleSearchChange} />
 
       <h2>add a new</h2>
