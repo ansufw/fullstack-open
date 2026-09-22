@@ -31,13 +31,31 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    
-    const duplicate = persons.some(
+
+    const existingPerson = persons.find(
       (person) => person.name.toLowerCase().trim() === newName.toLowerCase().trim()
     )
+    
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${existingPerson.name} is already added to phonebook, replace the old number with a new one?`
+      )
 
-    if (duplicate) {
-      alert(`${newName} is already added to phonebook`)
+      if (confirmUpdate) {
+
+        const changedPerson = {...existingPerson, number: newNumber}
+        personService
+          .update(existingPerson.id, changedPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.map((p) => p.id !== existingPerson.id ? p : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            alert(`Information of ${existingPerson.name} has already been removed from server`)
+            console.error(error)
+          })
+      }
       return
     }
 
