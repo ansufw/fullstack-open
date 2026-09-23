@@ -9,6 +9,15 @@ import Notification from './components/Notification'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationType, setNotificationType] = useState('success')
+
+  const showNotification = (message, type = 'success') => {
+    setNotificationMessage(message)
+    setNotificationType(type)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+  }
 
   useEffect(() => {
     personService
@@ -53,13 +62,11 @@ const App = () => {
             setPersons(persons.map((p) => p.id !== existingPerson.id ? p : returnedPerson))
             setNewName('')
             setNewNumber('')
-            setNotificationMessage(`Updated ${existingPerson.name}`)
-            setTimeout(() => {
-              setNotificationMessage(null)
-            }, 5000)
+            showNotification(`Updated ${existingPerson.name}`, "success")
           })
           .catch(error => {
-            alert(`Information of ${existingPerson.name} has already been removed from server`)
+            showNotification(`Information of ${existingPerson.name} has already been removed from server`, 'error')
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
             console.error(error)
           })
       }
@@ -71,16 +78,20 @@ const App = () => {
       number: newNumber,
       id: persons.length > 0 ? Math.max(...persons.map((p) => p.id)) + 1 : 1
     }
-    personService.create(newPerson)
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+        showNotification(`Added ${newPerson.name}`, 'success')
+      })
 
-    setPersons(persons.concat(newPerson))
+      // setPersons(persons.concat(newPerson))
+      // setNewName('')
+      // setNewNumber('')
+      // showNotification(`Added ${newPerson.name}`, 'success')
 
-    setNewName('')
-    setNewNumber('')
-    setNotificationMessage(`Added ${newPerson.name}`)
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 5000)
   }
 
   const deletePerson = (id) => {
@@ -89,10 +100,11 @@ const App = () => {
       personService
         .remove(id)
         .then(() => {
-        setPersons(persons.filter(p => p.id !== id))
-      })
+          setPersons(persons.filter(p => p.id !== id))
+        })
         .catch(error => {
-        alert(`fail to remove ${person.name}`)
+        showNotification(`information of ${person.name} has already removed from server`, 'error')
+        setPersons(persons.filter(p => p.id !== id))
         console.log(`error: ${error}`)
       })
     }
@@ -103,7 +115,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} type={notificationType} />
 
       <Filter value={newSearch} onChange={handleSearchChange} />
 

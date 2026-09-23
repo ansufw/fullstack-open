@@ -6,11 +6,6 @@
       "id": "4"
     },
     {
-      "name": "anto",
-      "number": "44413",
-      "id": "lyHGLT9I1Xo"
-    },
-    {
       "name": "keny",
       "number": "34-23",
       "id": "gl5vRMfDL40"
@@ -19,21 +14,6 @@
       "name": "rere",
       "number": "32-32-32",
       "id": "rHY9IXnIeGI"
-    },
-    {
-      "name": "aaa",
-      "number": "233",
-      "id": "c2ZCyfPNs4g"
-    },
-    {
-      "name": "adi",
-      "number": "993322",
-      "id": "L8__7JWPjVY"
-    },
-    {
-      "name": "za",
-      "number": "333",
-      "id": "RH6-WHMAvlg"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
