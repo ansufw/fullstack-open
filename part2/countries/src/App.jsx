@@ -4,7 +4,7 @@ import axios from 'axios'
 import Country from './components/Country'
 
 const baseURL = 'https://studies.cs.helsinki.fi/restcountries'
-
+// const weatherGEO = http://api.openweathermap.org/geo/1.0
 
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
   const [searchresult, setsearchresult] = useState([])
   const [selectedCountry, setSelectedCountry] = useState(null)
 
-  // console.log('search words outside:', textsearch)
+  // handleInput
   const handleInput = (e) => {
     setText(e.target.value)
     setSelectedCountry(null)
@@ -27,6 +27,7 @@ const App = () => {
     })
   }
 
+  // handle show button
   const showCountry = (country) => {
     setSelectedCountry(country)
   }
@@ -50,8 +51,9 @@ const App = () => {
               )}
             </ul>
           : searchresult.length === 1
-            ? <Country value={searchresult[0]} />
+            ?  <Country value={searchresult[0]} />
             : null}
+
     </>
   )
 }
